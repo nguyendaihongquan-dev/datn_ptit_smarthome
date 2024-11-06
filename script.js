@@ -22,18 +22,47 @@ function updateDeviceState(deviceID, toggleButtonId, state) {
     // Cập nhật hình ảnh tương ứng
     deviceElement.src = state ? "/assets/images/light_on.png" : "/assets/images/light_off.png";
 }
+function updateDeviceStateGas(deviceID, toggleButtonId, state) {
+    const deviceElement = document.getElementById(deviceID);
+    const toggleButton = document.getElementById(toggleButtonId);
 
+    // Cập nhật trạng thái của nút gạt
+    toggleButton.checked = state;
+    // Cập nhật hình ảnh tương ứng
+    deviceElement.src = state ? "/assets/images/FireOn.png" : "/assets/images/FireOff.png";
+}
+function updateDeviceStateDoor(deviceID, toggleButtonId, state) {
+    const deviceElement = document.getElementById(deviceID);
+    const toggleButton = document.getElementById(toggleButtonId);
+
+    // Cập nhật trạng thái của nút gạt
+    toggleButton.checked = state;
+    // Cập nhật hình ảnh tương ứng
+    deviceElement.src = state ? "/assets/images/icons8-open-door.png" : "/assets/images/icons8-door-closed.png";
+}
+function updateDeviceStateCondition(deviceID, toggleButtonId, state) {
+    const deviceElement = document.getElementById(deviceID);
+    const toggleButton = document.getElementById(toggleButtonId);
+
+    // Cập nhật trạng thái của nút gạt
+    toggleButton.checked = state;
+    // Cập nhật hình ảnh tương ứng
+    deviceElement.src = state ? "/assets/images/dieuhoa_on.png" : "/assets/images/dieuhoa_off.png";
+}
+function updateDeviceStateFan(deviceID, toggleButtonId, state) {
+    const deviceElement = document.getElementById(deviceID);
+    const toggleButton = document.getElementById(toggleButtonId);
+
+    // Cập nhật trạng thái của nút gạt
+    toggleButton.checked = state;
+    // Cập nhật hình ảnh tương ứng
+    deviceElement.src = state ? "/assets/images/qq_on.png" : "/assets/images/qq_off.png";
+}
 // Hàm thay đổi trạng thái thiết bị trong Firebase
 function changeDevice(path, newState) {
     const deviceRef = firebase.database().ref(path);
     deviceRef.set(newState)
         .then(() => {
-            if (newState === true) {
-                const audio = new Audio('assets/audio/warning.mp3'); // Đường dẫn đến file mp3 của bạn
-                audio.play().catch((error) => {
-                    console.error("Không thể phát âm thanh:", error);
-                });
-            }
             console.log('Trạng thái thiết bị đã được cập nhật');
         })
         .catch((error) => {
@@ -51,11 +80,52 @@ function listenToDeviceChanges(deviceID, path, toggleButtonId) {
         updateDeviceState(deviceID, toggleButtonId, status);
     });
 }
+function listenToDeviceChangesGas(deviceID, path, toggleButtonId) {
+    const deviceRef = firebase.database().ref(path);
 
+    deviceRef.on("value", (snapshot) => {
+        const status = snapshot.val();
+        // Cập nhật giao diện khi trạng thái thay đổi từ Firebase
+        updateDeviceStateGas(deviceID, toggleButtonId, status);
+    });
+}
+function listenToDeviceChangesDoor(deviceID, path, toggleButtonId) {
+    const deviceRef = firebase.database().ref(path);
+
+    deviceRef.on("value", (snapshot) => {
+        const status = snapshot.val();
+        // Cập nhật giao diện khi trạng thái thay đổi từ Firebase
+        updateDeviceStateDoor(deviceID, toggleButtonId, status);
+    });
+}
+function listenToDeviceChangesFan(deviceID, path, toggleButtonId) {
+    const deviceRef = firebase.database().ref(path);
+
+    deviceRef.on("value", (snapshot) => {
+        const status = snapshot.val();
+        // Cập nhật giao diện khi trạng thái thay đổi từ Firebase
+        updateDeviceStateDoor(deviceID, toggleButtonId, status);
+    });
+}
+function listenToDeviceChangesCondition(deviceID, path, toggleButtonId) {
+    const deviceRef = firebase.database().ref(path);
+
+    deviceRef.on("value", (snapshot) => {
+        const status = snapshot.val();
+        // Cập nhật giao diện khi trạng thái thay đổi từ Firebase
+        updateDeviceStateCondition(deviceID, toggleButtonId, status);
+    });
+}
 // Gọi hàm lắng nghe cho các thiết bị
 listenToDeviceChanges("light_image1", "devices/phongkhach", "toggle_button1");
 listenToDeviceChanges("light_image2", "devices/phongngu", "toggle_button2");
 listenToDeviceChanges("light_image3", "devices/phongbep", "toggle_button3");
+listenToDeviceChanges("image_lamp", "devices/led", "toggle_lamp");
+listenToDeviceChangesGas("image_gas", "sensor/fire", "toggle_button_gas");
+listenToDeviceChangesDoor("image_door", "devices/door", "toggle_door");
+listenToDeviceChangesFan("quat", "devices/fan", "toggle_fan");
+listenToDeviceChangesCondition("dieuhoa", "devices/condition", "toggle_condition");
+
 
 // Gọi hàm thay đổi trạng thái khi người dùng nhấn toggle button
 document.getElementById("toggle_button1").addEventListener("change", function () {
@@ -71,6 +141,30 @@ document.getElementById("toggle_button2").addEventListener("change", function ()
 document.getElementById("toggle_button3").addEventListener("change", function () {
     const newState = this.checked;
     changeDevice("devices/phongbep", newState);
+});
+document.getElementById("toggle_button3").addEventListener("change", function () {
+    const newState = this.checked;
+    changeDevice("devices/phongbep", newState);
+});
+document.getElementById("toggle_button_gas").addEventListener("change", function () {
+    const newState = this.checked;
+    changeDevice("sensor/fire", newState);
+});
+document.getElementById("toggle_door").addEventListener("change", function () {
+    const newState = this.checked;
+    changeDevice("devices/door", newState);
+});
+document.getElementById("toggle_lamp").addEventListener("change", function () {
+    const newState = this.checked;
+    changeDevice("devices/led", newState);
+});
+document.getElementById("toggle_fan").addEventListener("change", function () {
+    const newState = this.checked;
+    changeDevice("devices/fan", newState);
+});
+document.getElementById("toggle_condition").addEventListener("change", function () {
+    const newState = this.checked;
+    changeDevice("devices/condition", newState);
 });
 var gas = 0;
 var humi = 0;
@@ -113,5 +207,22 @@ function listenDataSensor() {
 
 }
 listenDataSensor()
+var valueRef = firebase.database().ref('sensor/temp');
+function cong() {
+    valueRef.once('value', function (snapshot) {
+        var currentValue = snapshot.val();
+        var newValue = currentValue + 1; // Tăng giá trị lên 1
+        valueRef.set(newValue); // Cập nhật giá trị mới lên Firebase
+        console.log("Giá trị sau khi cộng:", newValue);
+    });
+}
 
-
+// Hàm trừ giá trị
+function tru() {
+    valueRef.once('value', function (snapshot) {
+        var currentValue = snapshot.val();
+        var newValue = currentValue - 1; // Giảm giá trị đi 1
+        valueRef.set(newValue); // Cập nhật giá trị mới lên Firebase
+        console.log("Giá trị sau khi trừ:", newValue);
+    });
+}
