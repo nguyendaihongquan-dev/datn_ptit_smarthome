@@ -76,12 +76,13 @@
                     <div class="img_alarm">
                         <img src="./assets/images/alarmOFF.png" alt="" id="image_robber">
                     </div>
-                    <div class="button_alarm">
+                    <!-- chưa biết làm gì -->
+                    <!-- <div class="button_alarm">
                         <label class="toggle onsecutity">
                             <input onclick="changeImage8()" type="checkbox">
                             <span class="slider"></span>
                         </label>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="main_control">
                     <div class="box_item1">
@@ -174,67 +175,5 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
     <script src="script.js"></script>
-<!-- <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-database.js"></script>
-     TODO: Add SDKs for Firebase products that you want to use
-         https://firebase.google.com/docs/web/setup#available-libraries -->
-<!-- <script src="https://www.gstatic.com/firebasejs/8.2.10/firebase-analytics.js"></script>
-<script type="module">
-        const firebaseConfig = {
-          apiKey: "AIzaSyByOuwXWnp_69kLjhFPMi71LQa60gKXaE0",
-          authDomain: "smarthome-88f4f.firebaseapp.com",
-          databaseURL: "https://smarthome-88f4f-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "smarthome-88f4f",
-          storageBucket: "smarthome-88f4f.appspot.com",
-          messagingSenderId: "38447789056",
-          appId: "1:38447789056:web:53a4dc442aab471f9054e5"
-        };
-      
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        firebase.analytics();
-  
-  //functions
-  // make sure that the name in ' ' match with name of your database child
-  var nhietDo = document.getElementById('value1');
-  var dbRef = firebase.database().ref().child('T');
-  var doAm = document.getElementById('value2');
-  var dbRef2 = firebase.database().ref().child('H');
-  dbRef.on('value', snap => nhietDo.innerText = snap.val());
-  dbRef2.on('value', snap => doAm.innerText = snap.val());
-//   ----------khí gas------------------------//
-  var dbRefGas = firebase.database().ref('security').child('Gas');
-  var lightBulb1 = document.getElementById("image_gas");
-  dbRefGas.on('value', snap => {
-    if (snap.val() == "OFF") {
-      lightBulb1.src = "/assets/images/FireOff.png";
-    } else if (snap.val() == "ON") {
-      lightBulb1.src = "/assets/images/FireOn.png";
-    }
-  });
-//   --------door--------------//
-/*
-  var dbRefdoor = firebase.database().ref('security').child('door');
-  var lightBulb2 = document.getElementById("image_door");
-  dbRefdoor.on('value', snap => {
-    if (snap.val() == "OFF") {
-      lightBulb2.src = "//assets/images/icons8-door-closed.png";
-    } else if (snap.val() == "ON") {
-      lightBulb2.src = "//assets/images/icons8-open-door.png";
-    }
-  });
-  */
-//   -----------lammmm state-----------//
-var dbReflam = firebase.database().ref('security').child('lamm');
-  var lightBulb3 = document.getElementById("image_lamp");
-  dbReflam.on('value', snap => {
-    if (snap.val() == "OFF") {
-      lightBulb3.src = "/assets/images/light_off.png";
-    } else if (snap.val() == "ON") {
-      lightBulb3.src = "/assets/images/light_on.png";
-    }
-  });
-
-</script> --> -->
 </body>
 </html>

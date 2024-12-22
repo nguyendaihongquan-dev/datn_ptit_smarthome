@@ -13,6 +13,10 @@ firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
 // Hàm cập nhật trạng thái thiết bị (checkbox và hình ảnh)
+// deviceID: id  ảnh của button
+// toggleButtonId: id button
+// state : trạng thái button true or false;
+// thay đổi trạng thái button từ web , và đẩy trạng thai lên firebase
 function updateDeviceState(deviceID, toggleButtonId, state) {
     const deviceElement = document.getElementById(deviceID);
     const toggleButton = document.getElementById(toggleButtonId);
@@ -71,12 +75,16 @@ function changeDevice(path, newState) {
 }
 
 // Hàm lắng nghe thay đổi trạng thái thiết bị từ Firebase
+// deviceId: id ảnh của button
+// path: trỏ đến trường dữ liệu trên firebase
+// toggleButtonId : id button
+// lắng nghe dữ liệu thay đổi trên firebase , và hiển thị trạng thái button
 function listenToDeviceChanges(deviceID, path, toggleButtonId) {
     const deviceRef = firebase.database().ref(path);
 
     deviceRef.on("value", (snapshot) => {
         const status = snapshot.val();
-        // Cập nhật giao diện khi trạng thái thay đổi từ Firebase
+      
         updateDeviceState(deviceID, toggleButtonId, status);
     });
 }
@@ -179,9 +187,10 @@ function listenDataSensor() {
     gasData.on("value", (snapshot) => {
         gas = snapshot.val();
         console.log("Dữ liệu gas:", gas);
+        // dữ liệu gas lớn hơn để cảnh báo
         if (gas > 11.2) {
             if (!audio) { // Chỉ phát nếu chưa có âm thanh đang phát
-                audio = new Audio('assets/audio/warning.mp3');
+                audio = new Audio('./assets/audio/warning.mp3');
                 audio.loop = true; // Phát lặp lại để cảnh báo liên tục
                 audio.play().catch((error) => {
                     console.error("Không thể phát âm thanh:", error);
