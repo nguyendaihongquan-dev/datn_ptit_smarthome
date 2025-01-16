@@ -229,6 +229,23 @@
     color: #d3eff4;
     font-size: 20px;
   }
+  #rain_title{
+    color: #d3eff4;
+    font-size: 20px;
+  }
+  #weather-container {
+    text-align: center; /* Canh giữa nội dung */
+    padding: 20px; /* Khoảng cách bên trong container */
+}
+
+#weather-image {
+    width: 150px; /* Đặt kích thước chiều rộng của hình ảnh */
+    height: auto; /* Tự động điều chỉnh chiều cao để giữ tỷ lệ */
+    border: 3px solid #4CAF50; /* Thêm viền màu xanh lá cây */
+    border-radius: 10px; /* Làm bo tròn các góc */
+    padding: 5px; /* Khoảng cách giữa ảnh và viền */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Thêm hiệu ứng đổ bóng */
+}
 
   .door_img img{
     background-color: #d3eff4;

@@ -84,7 +84,7 @@ function listenToDeviceChanges(deviceID, path, toggleButtonId) {
 
     deviceRef.on("value", (snapshot) => {
         const status = snapshot.val();
-      
+
         updateDeviceState(deviceID, toggleButtonId, status);
     });
 }
@@ -128,11 +128,9 @@ function listenToDeviceChangesCondition(deviceID, path, toggleButtonId) {
 listenToDeviceChanges("light_image1", "devices/phongkhach", "toggle_button1");
 listenToDeviceChanges("light_image2", "devices/phongngu", "toggle_button2");
 listenToDeviceChanges("light_image3", "devices/phongbep", "toggle_button3");
-listenToDeviceChanges("image_lamp", "devices/led", "toggle_lamp");
 listenToDeviceChangesGas("image_gas", "sensor/fire", "toggle_button_gas");
 listenToDeviceChangesDoor("image_door", "devices/door", "toggle_door");
-listenToDeviceChangesFan("quat", "devices/fan", "toggle_fan");
-listenToDeviceChangesCondition("dieuhoa", "devices/condition", "toggle_condition");
+
 
 
 // Gọi hàm thay đổi trạng thái khi người dùng nhấn toggle button
@@ -162,21 +160,10 @@ document.getElementById("toggle_door").addEventListener("change", function () {
     const newState = this.checked;
     changeDevice("devices/door", newState);
 });
-document.getElementById("toggle_lamp").addEventListener("change", function () {
-    const newState = this.checked;
-    changeDevice("devices/led", newState);
-});
-document.getElementById("toggle_fan").addEventListener("change", function () {
-    const newState = this.checked;
-    changeDevice("devices/fan", newState);
-});
-document.getElementById("toggle_condition").addEventListener("change", function () {
-    const newState = this.checked;
-    changeDevice("devices/condition", newState);
-});
 var gas = 0;
 var humi = 0;
 var temp = 0;
+var fire = 1;
 let audio;
 function listenDataSensor() {
     var humidityElement = document.getElementById("value2");
@@ -184,11 +171,33 @@ function listenDataSensor() {
     const gasData = firebase.database().ref("sensor/gas");
     const humiData = firebase.database().ref("sensor/humi");
     const tempData = firebase.database().ref("sensor/temp");
+    const fireData = firebase.database().ref("sensor/fire");
     gasData.on("value", (snapshot) => {
         gas = snapshot.val();
         console.log("Dữ liệu gas:", gas);
         // dữ liệu gas lớn hơn để cảnh báo
-        if (gas > 11.2) {
+        if (gas > 2000) {
+            if (!audio) { // Chỉ phát nếu chưa có âm thanh đang phát
+                audio = new Audio('./assets/audio/warning.mp3');
+                audio.loop = true; // Phát lặp lại để cảnh báo liên tục
+                audio.play().catch((error) => {
+                    console.error("Không thể phát âm thanh:", error);
+                });
+            }
+        } else {
+            if (audio) { // Dừng âm thanh nếu có âm thanh đang phát
+                audio.pause();
+                audio.currentTime = 0; // Đặt lại thời gian phát về ban đầu
+                audio = null; // Xóa tham chiếu để có thể phát lại khi vượt ngưỡng
+            }
+        }
+    });
+
+    fireData.on("value", (snapshot) => {
+        fire = snapshot.val();
+        console.log("Dữ liệu fire:", fire);
+        // dữ liệu gas lớn hơn để cảnh báo
+        if (fire == 0) {
             if (!audio) { // Chỉ phát nếu chưa có âm thanh đang phát
                 audio = new Audio('./assets/audio/warning.mp3');
                 audio.loop = true; // Phát lặp lại để cảnh báo liên tục
@@ -217,21 +226,21 @@ function listenDataSensor() {
 }
 listenDataSensor()
 var valueRef = firebase.database().ref('sensor/temp');
-function cong() {
-    valueRef.once('value', function (snapshot) {
-        var currentValue = snapshot.val();
-        var newValue = currentValue + 1; // Tăng giá trị lên 1
-        valueRef.set(newValue); // Cập nhật giá trị mới lên Firebase
-        console.log("Giá trị sau khi cộng:", newValue);
-    });
-}
 
-// Hàm trừ giá trị
-function tru() {
-    valueRef.once('value', function (snapshot) {
-        var currentValue = snapshot.val();
-        var newValue = currentValue - 1; // Giảm giá trị đi 1
-        valueRef.set(newValue); // Cập nhật giá trị mới lên Firebase
-        console.log("Giá trị sau khi trừ:", newValue);
-    });
-}
+
+const rainRef = firebase.database().ref('sensor/rain');
+
+// Set the image element
+const weatherImage = document.getElementById("weather-image");
+
+// Listen for changes in the database value
+rainRef.on("value", (snapshot) => {
+    const value = snapshot.val();
+    if (value === 0) {
+        weatherImage.src = "assets/images/sun.png"; // Replace with your sunny image path
+        weatherImage.alt = "Sunny";
+    } else if (value === 1) {
+        weatherImage.src = "assets/images/rain.jpg"; // Replace with your rainy image path
+        weatherImage.alt = "Rainy";
+    }
+});
